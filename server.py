@@ -19,16 +19,16 @@ class QtServerBase(Qt.QtCore.QObject, ServerBase):
         )
 
         # -- Qt redirect to prevent methods from being executed off the main thread.
-        self.RespondRequested.connect(self.__respond)
+        self.RespondRequested.connect(self._qt_respond)
 
         self.start_queue()
 
     # ------------------------------------------------------------------------------------------------------------------
-    def __respond(self, handler, connection, transaction_id, header_data, data):
+    def _qt_respond(self, handler, connection, transaction_id, header_data, data):
         # type: (BaseRequestHandler, socket.socket, str, dict, dict) -> None
-        ServerBase._respond(self, handler, connection, transaction_id, header_data, data)
+        ServerBase.__respond(self, handler, connection, transaction_id, header_data, data)
 
     # ------------------------------------------------------------------------------------------------------------------
-    def _respond(self, handler, connection, transaction_id, header_data, data):
+    def __respond(self, handler, connection, transaction_id, header_data, data):
         # type: (BaseRequestHandler, socket.socket, str, dict, dict) -> None
         self.RespondRequested.emit(handler, connection, transaction_id, header_data, data)
